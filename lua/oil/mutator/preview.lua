@@ -45,11 +45,15 @@ end
 ---@param bufnr integer
 ---@param lines string[]
 local function render_lines(winid, bufnr, lines)
-  util.render_text(
-    bufnr,
-    lines,
-    { v_align = "top", h_align = "left", winid = winid, actions = { "[O]k", "[C]ancel" } }
-  )
+  util.render_text(bufnr, lines, {
+    v_align = "top",
+    h_align = "left",
+    winid = winid,
+    actions = {
+      config.confirmation.confirm.text,
+      config.confirmation.cancel.text,
+    },
+  })
 end
 
 ---@param actions oil.Action[]
@@ -165,17 +169,16 @@ M.show = vim.schedule_wrap(function(actions, should_confirm, cb)
       end,
     })
   )
-  for _, cancel_key in ipairs({ "q", "C", "c", "<C-c>", "<Esc>" }) do
+  for _, cancel_key in ipairs(config.confirmation.cancel.keys) do
     vim.keymap.set("n", cancel_key, function()
       cancel()
     end, { buffer = bufnr, nowait = true })
   end
-  vim.keymap.set("n", "O", function()
-    confirm()
-  end, { buffer = bufnr })
-  vim.keymap.set("n", "o", function()
-    confirm()
-  end, { buffer = bufnr })
+  for _, confirm_key in ipairs(config.confirmation.confirm.keys) do
+    vim.keymap.set("n", confirm_key, function()
+      confirm()
+    end, { buffer = bufnr, nowait = true })
+  end
 end)
 
 return M

@@ -159,6 +159,16 @@ local default_config = {
   ssh = {
     border = "rounded",
   },
+  confirmation = {
+    confirm = {
+      text = "[O]k",
+      keys = { "O", "o" },
+    },
+    cancel = {
+      text = "[C]ancel",
+      keys = { "q", "C", "c", "<C-c>", "<Esc>" },
+    },
+  },
 }
 
 -- The adapter API hasn't really stabilized yet. We're not ready to advertise or encourage people to
